@@ -14,7 +14,8 @@ namespace Adrienne.Functions
         [FunctionName("SpinDreidel")]
         public static HttpResponseMessage Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
-            ILogger log)
+            ILogger log,
+            ExecutionContext context)
         {
             log.LogInformation("Dreidel has been spinned...");
 
@@ -25,10 +26,20 @@ namespace Adrienne.Functions
             // Grab corresponding dreidel result gif
             MemoryStream stream = new MemoryStream();
 
-            using (FileStream fileStream = File.OpenRead($"./DreidelResults/{dreidelResult}.gif")) {
-                stream.SetLength(fileStream.Length);
-                fileStream.Read(stream.GetBuffer(), 0, (int)fileStream.Length);
-            };
+            try
+            {
+                var filepath = Path.GetFullPath(Path.Combine(context.FunctionDirectory, $"..\\DreidelResults\\{dreidelResult}.gif"));
+                using (FileStream fileStream = File.OpenRead(filepath)) {
+                    stream.SetLength(fileStream.Length);
+                    fileStream.Read(stream.GetBuffer(), 0, (int)fileStream.Length);
+                };
+            }
+            catch (System.Exception)
+            {
+                log.LogError(Path.GetFullPath(Path.Combine(context.FunctionDirectory, $"..\\DreidelResults\\{dreidelResult}.gif")));
+                throw;
+            }
+           
 
             // Return dreidel spin result to user!
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
