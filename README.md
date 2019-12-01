@@ -10,7 +10,7 @@ I'm joining the #25DaysOfServerless! C# Solutions by `@adriennetacke` 😊
 ## Progress
 
 | Day  | Solved |
-|---|:---:|:---:|
+|---|:---:|
 | [Day 1: Spin the Dreidel!](https://github.com/adriennetacke/25-days-of-serverless-2019/tree/master/day-1-dreidel-spin)| ✔| 
 
 ## About
